@@ -3,9 +3,9 @@
 # 要求
 实现三角函数的计算器（sin、cos、arcsin、arctan）
 # 运行环境
-python==3.7
-pyqt5==5.12.3
-pyqt5-tools==5.12.3.1.5
+* python==3.7
+* pyqt5==5.12.3
+* pyqt5-tools==5.12.3.1.5
 # 项目成员(字母排序)
 * 姜仁杰
 * 康晓华
