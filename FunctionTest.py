@@ -1,15 +1,15 @@
 """
-@Project ：TrigonometricFunctions-main
-@File ：Operation_test.py
-@Author ：ZouXuan
-@Date ：2021/6/30 14:14
+@Project ：tri-func
+@File ：FunctionTest.py
+@Author ：Linshuaijiang
+@Date ：2022/3/29 16:25
 """
 
 import unittest
-from arcsin import asin
-from arctan import atan
-from cos import cos
-from sin import sin
+from function_angle.arcsin import asin
+from function_angle.arctan import atan
+from function_angle.cos import cos
+from function_angle.sin import sin
 
 
 class TestFunc(unittest.TestCase):         # 测试类
