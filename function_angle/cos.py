@@ -25,12 +25,17 @@ def taylor(x, n):
     return a
 
 
-def cos(x):
+def cos(x, flag=False):
     """
-    输入值x
-    返回cos值
+    输入值 角度或者弧度
+    flag:Ture 表示弧度，False 表示角度 默认角度
+    return cosx 保留小数后三位
     """
-    x = x / 180 * math.pi
+    if not flag:
+        x = x / 180 * math.pi
+    # 根据周期性，对弧度划分到[0,2*pi]
+    if x < 0 or x > 2 * pi:
+        x = x % (2 * pi)
 
     return round(taylor(x, 50), 3)
 

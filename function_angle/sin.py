@@ -2,14 +2,17 @@ from math import fabs
 from math import pi
 
 
-def sin(x):
+def sin(x, flag=False):
     """
     输入 x
-    返回x的sin值
-    
+    flag Ture 弧度 ，False 角度 默认角度
     """
-    x = x / 180 * pi  # 输入角度转换为弧度
+    if not flag:
+        x = x / 180 * pi  # 输入角度转换为弧度
 
+    # 根据周期性，对弧度平移到[0,2*pi]
+    if x < 0 or x > 2 * pi:
+        x = x % (2 * pi)
     g = 0
     t = x
     n = 1
