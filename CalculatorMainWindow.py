@@ -14,7 +14,7 @@ class MainWindow(QMainWindow):
         self.ui.setup_ui(self)
         self.is_compute = False  # 标志位，是否进行了运算
         self.is_error = False  # 标志位，运算是否出错，出错了运算按钮将锁死
-        self.is_rad = True  # sin cos标志位 ，表示是否计算的是弧度
+        self.is_rad = True  # 标志位 ，表示是否计算的是弧度
         self.ui.number_0_button.clicked.connect(lambda: self.display_number(0))
         self.ui.number_1_button.clicked.connect(lambda: self.display_number(1))
         self.ui.number_2_button.clicked.connect(lambda: self.display_number(2))
@@ -37,8 +37,9 @@ class MainWindow(QMainWindow):
 
     def str_to_number(self):
         """
-        将显示框的文本转为对应的数值
-        :return: number，字符串对应的值
+        将显示框的文本转为对应的数值，判断字符串是否为空，
+        对字符串中是否包含“°”进行判读，并改变self.is_rad状态
+        :return: number，字符串对应的值或者None
         """
 
         number_str = self.ui.display_box.text()
@@ -48,7 +49,8 @@ class MainWindow(QMainWindow):
         if "°" in number_str:
             self.is_rad = False
             number_str = number_str[:-1]  # 去掉度数单位，截取数字文本 并且转换为弧度
-
+        if self.is_error:
+            return None
         return eval(number_str)
 
     def display_to_box(self, content):
@@ -67,15 +69,18 @@ class MainWindow(QMainWindow):
         """
 
         input_value = self.str_to_number()  # 获取用户输入
-        if self.is_error:
+
+        if self.is_error or input_value is None:
             return None
         if compute_type == 0:
             result = sin(input_value, self.is_rad)  # 计算sin
         elif compute_type == 1:
             result = cos(input_value, self.is_rad)  # 计算cos
-        elif compute_type == 2:
+        elif compute_type == 2 and self.is_rad:
+            # 这里使用self.is_rad进行判读，是为了防止输入值是度数
             result = str(atan(input_value)) + "°"  # 计算arctan
-        else:
+        elif compute_type == 3 and self.is_rad:
+
             result = asin(input_value)  # 计算arcsin
             if isinstance(result, bool):
                 # 返回一个bool值说明输入有误，显示提示信息
@@ -83,6 +88,9 @@ class MainWindow(QMainWindow):
                 self.is_error = True
             else:
                 result = str(result) + "°"
+        else:
+            result = "无效输入"
+            self.is_error = True  # 出错 锁死
         self.display_to_box(str(result))  # 显示结果
         self.is_rad = True
         self.is_compute = True
@@ -155,9 +163,14 @@ class MainWindow(QMainWindow):
     def change_rad(self):
         """
         改变显示框中数值的弧度或者角度
-        return:文本显示
+        return:
         """
-        return self.ui.display_box.setText(self.ui.display_box.text() + '°')
+        if self.is_rad:
+            self.is_rad = False
+            return self.ui.display_box.setText(self.ui.display_box.text() + '°')
+        else:
+            self.is_rad = True
+            return self.ui.display_box.setText(self.ui.display_box.text()[:-1])
 
 
 if __name__ == "__main__":
