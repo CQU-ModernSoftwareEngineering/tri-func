@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+"""
+@Project ：tri-func
+@File ：CalculatorMainWindow.py
+@Author ：JRJ
+@Date ：2022/3/31 17:00
+界面交互代码，调用计算函数接口，
+和界面按键监听接口，实现计算机界面交互设计
+"""
+
 import sys
 from CalculatorUi.CalculatorUi import UiMainWindow
 from function_angle.sin import sin
@@ -15,6 +25,7 @@ class MainWindow(QMainWindow):
         self.is_compute = False  # 标志位，是否进行了运算
         self.is_error = False  # 标志位，运算是否出错，出错了运算按钮将锁死
         self.is_rad = True  # 标志位 ，表示是否计算的是弧度
+        # 按键监听
         self.ui.number_0_button.clicked.connect(lambda: self.display_number(0))
         self.ui.number_1_button.clicked.connect(lambda: self.display_number(1))
         self.ui.number_2_button.clicked.connect(lambda: self.display_number(2))
@@ -41,7 +52,6 @@ class MainWindow(QMainWindow):
         对字符串中是否包含“°”进行判读，并改变self.is_rad状态
         :return: number，字符串对应的值或者None
         """
-
         number_str = self.ui.display_box.text()
         if len(number_str) < 1:
             self.is_error = True
