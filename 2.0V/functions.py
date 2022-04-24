@@ -1,21 +1,19 @@
-
-
 def radian(value):
-    value = value/57.3
+    value = value / 57.3
     return round(value, 10)
 
 
 def arctanx(num, str):
     tanx = num
     # 输入判断
-    if(tanx >= -65535 and tanx <= 65535 and str == "弧度"):
+    if (tanx >= -65535 and tanx <= 65535 and str == "弧度"):
         compute = True
-    if(tanx >= -65535 and tanx <= 65535 and str == "角度"):
+    if (tanx >= -65535 and tanx <= 65535 and str == "角度"):
         compute = True
     else:
         compute = False
     # 符合输入规范则进行计算，并返回结果；否则返回"None"
-    if(compute):
+    if (compute):
         # 反正切计算
         ret = 0
         get = tanx
@@ -23,7 +21,7 @@ def arctanx(num, str):
         n = 0
         while index < 100000:
             index = index + 1
-            ret = ret+(((-1)**n)/(2*n+1))*(get**(2*n+1))
+            ret = ret + (((-1) ** n) / (2 * n + 1)) * (get ** (2 * n + 1))
             n = n + 1
         # ret = "%.3f" % ret
         if (str == "角度"):
@@ -39,37 +37,37 @@ def arctanx(num, str):
 
 def arcsine(float, str):
     # 输入正确性判断
-    if(float >= -1 and float <= 1 and str == "弧度"):
+    if (float >= -1 and float <= 1 and str == "弧度"):
         compute = True
-    elif(float >= -1 and float <= 1 and str == "角度"):
+    elif (float >= -1 and float <= 1 and str == "角度"):
         compute = True
     else:
         compute = False
     #
     # 符合输入规范则进行计算，并返回结果；否则返回"None"
-    if(compute):
+    if (compute):
         # 反正弦计算
         res = float
         index = 1
         m = 2
         n = 1
-        i = 1/2
-        if(str == "弧度"):  # 结果输出采用弧度制
+        i = 1 / 2
+        if (str == "弧度"):  # 结果输出采用弧度制
             while index < 197293:
                 index = index + 2
-                res = res + i*(float**index/index)
+                res = res + i * (float ** index / index)
                 m = m + 2
                 n = n + 2
-                i = i * n/m
+                i = i * n / m
             # res = "%.2f" % res
             # res = float(res)
-        else:             # 结果输出采用角度制
+        else:  # 结果输出采用角度制
             while index < 961337:
                 index = index + 2
-                res = res + i*(float**index/index)
+                res = res + i * (float ** index / index)
                 m = m + 2
                 n = n + 2
-                i = i * n/m
+                i = i * n / m
             res = res / 3.1415926535 * 180
             # res = "%.2f" % res
             # res = float(res)
@@ -79,7 +77,7 @@ def arcsine(float, str):
     return res
 
 
-class MyFun (object):
+class MyFun(object):
     def __init__(self, e=1e-3):
         self.e = e
 
@@ -89,7 +87,7 @@ class MyFun (object):
         i = 0
         f = 1
         while abs(item) > self.e:
-            item = f * ((x ** i) / self . fact(i))
+            item = f * ((x ** i) / self.fact(i))
             sum += item
             f = - f
             i += 2
@@ -105,8 +103,8 @@ class MyFun (object):
 
     def sin(self, x):
         n = x
-        sum,  i = 0,  1
-        while abs(n) > self .e:
+        sum, i = 0, 1
+        while abs(n) > self.e:
             sum += n
             i += 1
             n = - n * x * x / (2 * i - 1) / (2 * i - 2)
@@ -114,25 +112,49 @@ class MyFun (object):
         return sum
 
 
-def sin_t(x):
+# 计算sin
+
+def sin_t(x, flag=True):
     pi = 3.1415926535
     cc = MyFun()
-    return round(cc.sin(x*pi/180), 10)
+
+    if flag:
+        if x > 2 * pi:
+            x = x % (2 * pi)
+        elif x < 0:
+            x = x % (-2 * pi) + pi
+        return round(cc.sin(x), 3)
+    else:
+        return round(cc.sin(x * pi / 180), 3)
+
 
 # 计算cos
 
 
-def cos_t(x):
+def cos_t(x, flag=True):
     pi = 3.1415926535
     ss = MyFun()
-    return round(ss.cos(x*pi/180), 10)
+    if flag:
+        if x > 2 * pi:
+            x = x % (2 * pi)
+        elif x < 0:
+            x = x % (-2 * pi) + pi
+        return round(ss.cos(x), 3)
+    else:
+        return round(ss.cos(x * pi / 180), 3)
 
 
 # 计算tan
-def arcsine_t(x):
-    return round(arcsine(x, "角度"), 10)
+def arcsine_t(x, flag=True):
+    if flag:
+        return round(arcsine(x, "弧度"), 3)
+    else:
+        return round(arcsine(x, "角度"), 3)
 
 
 # 计算arctan
-def arctan_t(x):
-    return round(arctanx(x, "角度"), 10)
+def arctan_t(x, flag=True):
+    if flag:
+        return round(arctanx(x, "弧度"), 3)
+    else:
+        return round(arctanx(x, "角度"), 3)

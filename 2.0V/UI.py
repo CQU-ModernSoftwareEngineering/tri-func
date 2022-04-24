@@ -60,7 +60,7 @@ btn_arcsin = tkinter.Button(root,
                             width=75,
                             height=50,
                             compound="c",
-                            command=lambda x='arcsin': buttonClick1(x)
+                            command=lambda x='arcsine': buttonClick1(x)
                             )
 btn_arcsin.place(x=258, y=87, width=75, height=50)
 
@@ -285,8 +285,12 @@ contentEntry = tkinter.Entry(
     root, textvariable=contentVar, state='readonly', font=("Arial", 12))
 contentEntry.place(x=9, y=10, width=324, height=70)
 
+rad_flag = True
+sign_flag = True
+
 
 def buttonClick1(btn):
+    global rad_flag, sign_flag
     content = contentVar.get()
     if content.startswith('.'):  # 小数点前加0
         content = '0' + content
@@ -306,69 +310,71 @@ def buttonClick1(btn):
             strsin = r'sin\-?\d+(\.\d+)?'
             if 'sin' in content:
                 m = re.search(strsin, content)
+
                 if m is not None:
                     exchange = m.group()
-                    exchange1 = exchange
+
                     if '.' in exchange:
                         exchange = re.search("\-?\d+\.\d+", exchange)
                         value = exchange.group()
-                        value = str(sin_t(float(value)))
-                        content = content.replace(exchange1, value)
+                        value = str(sin_t(float(value), rad_flag))
+                        content = value
                     else:
                         exchange = re.search("\-?\d+", exchange)
                         value = exchange.group()
-                        value = str(sin_t(float(value)))
-                        content = content.replace(exchange1, value)
+                        value = str(sin_t(float(value), rad_flag))
+                        content = value
+                    rad_flag = True
             strcos = r'cos\-?\d+(\.\d+)?'
             if 'cos' in content:
                 m = re.search(strcos, content)
                 if m is not None:
                     exchange = m.group()
-                    exchange1 = exchange
                     if '.' in exchange:
                         exchange = re.search("\-?\d+\.\d+", exchange)
                         value = exchange.group()
-                        value = str(cos_t(float(value)))
-                        content = content.replace(exchange1, value)
+                        value = str(cos_t(float(value), rad_flag))
+                        content = value
                     else:
                         exchange = re.search("\-?\d+", exchange)
                         value = exchange.group()
-                        value = str(cos_t(float(value)))
-                        content = content.replace(exchange1, value)
+                        value = str(cos_t(float(value), rad_flag))
+                        content = value
+                    rad_flag = True
             strarcsine = r'arcsine\-?\d+(\.\d+)?'
             if 'arcsine' in content:
                 m = re.search(strarcsine, content)
                 if m is not None:
                     exchange = m.group()
-                    exchange1 = exchange
                     if '.' in exchange:
                         exchange = re.search("\-?\d+\.\d+", exchange)
                         value = exchange.group()
-                        value = str(arcsine_t(float(value)))
-                        content = content.replace(exchange1, value)
+                        value = str(arcsine_t(float(value), flag=False))
+                        content = value + "°"
                     else:
                         exchange = re.search("\-?\d+", exchange)
                         value = exchange.group()
-                        value = str(arcsine_t(float(value)))
-                        content = content.replace(exchange1, value)
+                        value = str(arcsine_t(float(value), flag=False))
+                        content = value + "°"
+                rad_flag = True
             strarctan = r'arctan\-?\d+(\.\d+)?'
             if 'arctan' in content:
                 m = re.search(strarctan, content)
                 if m is not None:
                     exchange = m.group()
-                    exchange1 = exchange
+
                     if '.' in exchange:
                         exchange = re.search("\-?\d+\.\d+", exchange)
                         value = exchange.group()
-                        value = str(arctan_t(float(value)))
-                        content = content.replace(exchange1, value)
+                        value = str(arctan_t(float(value), flag=False))
+                        content = value + "°"
                     else:
                         exchange = re.search("\-?\d+", exchange)
                         value = exchange.group()
-                        value = str(arctan_t(float(value)))
-                        content = content.replace(exchange1, value)
-            value = eval(content)
-            content = str(round(value, 10))
+                        value = str(arctan_t(float(value), flag=False))
+                        content = value + "°"
+                rad_flag = True
+
         except ZeroDivisionError:
             tk.messagebox.showerror('错误', 'VALUE ERROR')
             return
@@ -378,9 +384,16 @@ def buttonClick1(btn):
             return
         content += btn
     elif btn == 'rad':
-        content = str(radian(float(content))) + 'π'
-    elif btn == 'π':
-        content += '3.1415926535'
+        if 'arc' not in content:
+            if '°' in content:
+                content = content.replace('°', '')
+                rad_flag = not rad_flag
+                # print("1{}".format(rad_flag))
+            else:
+                content += '°'
+                rad_flag = not rad_flag
+
+
     elif btn == 'sin':
         content += 'sin'
     elif btn == 'cos':
@@ -392,8 +405,20 @@ def buttonClick1(btn):
     elif btn == 'C':  # 如果按下的是退格‘’，则选取当前数字第一位到倒数第二位
         content = content[0:-1]
     elif btn == 'sign':
-        pass
-    contentVar.set(content)
+        if '-' in content:
+            content = content.replace('-', '')
+            rad_flag = not sign_flag
+        else:
+            if "cos" in content:
+                content = content[:3] + '-' + content[3:]
+            if 'arctan' in content:
+                content = content[:6] + '-' + content[6:]
+            if 'arcsine' in content:
+                content = content[:7] + '-' + content[7:]
+            else:
+                content = content[:3] + '-' + content[3:]
+            sign_flag = not sign_flag
+
     contentVar.set(content)
 
 
